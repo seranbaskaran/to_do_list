@@ -33,11 +33,21 @@ function newElement()
 */
 let title=document.getElementById("title");
 let details=document.getElementById("details");
+let currentElement;
+function removeElement() {
+	var div = this.parentElement;
+	div.style.display = "none";
+}
+
+function updateElement (){
+	currentElement = this.parentElement;
+	title.value = currentElement.children[0].innerText;
+	details.value = currentElement.children[1].innerText;
+}
+
 function newElement()
 {
-	let divElement=document.createElement("div");
-	let h1Element=document.createElement("h1");
-	let pElement=document.createElement("p");
+	
 	let mainEle=document.getElementById("bottom");
 	
 	if(title.value=="" && details.value=="")
@@ -47,31 +57,45 @@ function newElement()
 	
 	else
 	{
-		var close=document.createElement("button");
-		mainEle.appendChild(divElement);
-		divElement.appendChild(h1Element);
-		divElement.appendChild(pElement);
-		h1Element.innerHTML=title.value;
-		pElement.innerHTML=details.value;
-		divElement.appendChild(close);
-		close.innerText="close";
-		close.setAttribute("class","close-btn");
-		divElement.setAttribute("class","box");
-		h1Element.setAttribute("class","box-title");
-		pElement.setAttribute("class","box-details");
+		if (currentElement){
+			currentElement.children[0].innerHTML=title.value;
+			currentElement.children[1].innerHTML=details.value;
+			currentElement = null;
+		}
+		else{
+			let divElement=document.createElement("div");
+			let h1Element=document.createElement("h1");
+			let pElement=document.createElement("p");
+			mainEle.appendChild(divElement);
+			
+			h1Element.innerHTML=title.value;
+			divElement.appendChild(h1Element);
+			
+			
+			pElement.innerHTML=details.value;		
+			divElement.appendChild(pElement);
+
+			
+			var close=document.createElement("button");
+			close.innerText="close";
+			close.setAttribute("class","close-btn");
+			close.onclick= removeElement;	
+			divElement.appendChild(close);
+			
+			var update=document.createElement("button");
+			update.innerText="update";
+			update.setAttribute("class","update-btn");
+			update.onclick= updateElement;	
+			divElement.appendChild(update);
+			
+			divElement.setAttribute("class","box");
+			h1Element.setAttribute("class","box-title");
+			pElement.setAttribute("class","box-details");
+		}
+		
 		title.value ="";
 		details.value ="";
 		
 	}
-var closeBtn=document.getElementsByClassName("close-btn");
-closeBtn=addEventListener(onclick,closingFunction);
-function closingFunction()
-{
-	console.log(closeBtn);
-	console.log(this.parentNode);
-	for(i=0;i<closeBtn.length;i++)
-	{
-	closeBtn[i].addEventListener("click",closingFunction);
-	}
 }
-}
+
